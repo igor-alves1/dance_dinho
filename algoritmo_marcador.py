@@ -5,15 +5,15 @@ from PPlay.window import *
 
 music = input("digite o nome do arquivo da musica: ")
 
-up_file = open(f'{music}_up_file.txt', 'w')
-down_file = open(f'{music}_down_file.txt', 'w')
-right_file = open(f'{music}_right_file.txt', 'w')
-left_file = open(f'{music}_left_file.txt', 'w')
+up_file = open(f'docs/{music}/{music}_up_file.txt', 'w')
+down_file = open(f'docs/{music}/{music}_down_file.txt', 'w')
+right_file = open(f'docs/{music}/{music}_right_file.txt', 'w')
+left_file = open(f'docs/{music}/{music}_left_file.txt', 'w')
 
 screen = Window(600, 600)
 teclado = screen.get_keyboard()
 
-closer = Sound(f'{music}.ogg')
+closer = Sound(f'docs/{music}/{music}.ogg')
 closer.set_volume(100)
 played = False
 
