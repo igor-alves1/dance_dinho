@@ -5,8 +5,15 @@ from PPlay.animation import *
 from PPlay.sound import *
 
 screen = Window(600, 600)
+screen.set_title("Dance, Dinho!")
 keyboard = screen.get_keyboard()
 background = GameImage("background_phase1.png")
+
+dinho = Sprite("dinho2.png")
+dinho.set_position(462-dinho.width/2, 395-dinho.height)
+
+nuvem = Sprite("assets/pompom.png")
+nuvem.set_position(dinho.x+dinho.width/2-15, dinho.y-40)
 
 up_list, down_list, right_list, left_list = [], [], [], []
 
@@ -99,6 +106,8 @@ def special_use(moving_arrows_array):
 
 while True:
     background.draw()
+    nuvem.draw()
+    dinho.draw()
     checker_right.draw()
     checker_left.draw()
     checker_up.draw()
