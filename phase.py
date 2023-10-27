@@ -6,6 +6,7 @@ from PPlay.sound import *
 
 screen = Window(600, 600)
 keyboard = screen.get_keyboard()
+background = GameImage("background_phase1.png")
 
 up_list, down_list, right_list, left_list = [], [], [], []
 
@@ -19,7 +20,7 @@ def readToList(doc_name, array):
 
     file.close()
 
-music = input("digite o arquivo da musica: ")
+music = "twinkle"
 song = Sound(f"docs/{music}/{music}.ogg")
 
 readToList(f'docs/{music}/{music}_up_file.txt', up_list)
@@ -69,9 +70,11 @@ def judge_inputs(key_entered, arrows_array, super_bar):
     elif len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<25:
         arrows_array.pop(0)
         return "ok"
-    else:
+    elif len(arrows_array)>0:
         arrows_array.pop(0)
         super_bar.height = 0
+        return "miss"
+    else:
         return "miss"
 
 def judge_resposta(resposta):
@@ -95,7 +98,7 @@ def special_use(moving_arrows_array):
     return score_special
 
 while True:
-    screen.set_background_color((0, 0, 0))
+    background.draw()
     checker_right.draw()
     checker_left.draw()
     checker_up.draw()
@@ -107,8 +110,9 @@ while True:
     if keyboard.key_pressed('enter') or start:
         countdown -= screen.delta_time()
         start = True
-        screen.draw_text(f'{countdown:.0f}', screen.width/2, screen.height/8, color=(255,255,255))
+        screen.draw_text(f'{countdown:.0f}', screen.width/2, screen.height/8, color=(16,22,51), size=20)
         if countdown <= 0:
+            countdown = 1
             start = False
             song.play()
             start_timer = True
@@ -116,8 +120,9 @@ while True:
     #inicia o timer e exibe o timer e o score na tela
     if start_timer:
         timer += screen.delta_time()
-        screen.draw_text(f'{timer:.1f}  {resposta}', screen.width/2, screen.height/8, color=(255,255,255))
-        screen.draw_text(f'{score}', screen.width/2, screen.height/8+20, color=(255,255,255))
+        screen.draw_text(f'{timer:.1f}', screen.width/2, screen.height/8, color=(16,22,51), size=20)
+        screen.draw_text(f'{score}', screen.width/2, screen.height/8+50, color=(16,22,51), size=20)
+        screen.draw_text(f'{resposta}', checker_up.x, checker_up.y-40, color=(255,255,255), size=15)
 
     #faz as setinhas surgirem com delay para chegarem do outro lado na tela no tempo certo
     if len(up_list)-1 > up_i  and timer >= (up_list[up_i]-4.9):
@@ -207,6 +212,7 @@ while True:
 
     if up_list[-1] < timer:
         start_timer = False
-        screen.draw_text(f'Finish!', screen.width/2, screen.height/8, color=(255,255,255))
+        screen.draw_text(f'Finish!', screen.width/2, screen.height/8, color=(0,0,0), size=35)
+        screen.pause()
         
     screen.update()
