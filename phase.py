@@ -213,6 +213,7 @@ while True:
     if up_list[-1] < timer:
         start_timer = False
         screen.draw_text(f'Finish!', screen.width/2, screen.height/8, color=(0,0,0), size=35)
+        screen.draw_text(f'{score}', screen.width/2, screen.height/8+10, color=(0,0,0), size=35)
         screen.pause()
         
     screen.update()
