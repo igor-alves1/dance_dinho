@@ -60,13 +60,17 @@ super_meter.height = 0
 
 def judge_inputs(key_entered, arrows_array, super_bar):
     if len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<5:
+        arrows_array.pop(0)
         super_bar.height += 5
         return "perfect"
     elif len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<15:
+        arrows_array.pop(0)
         return "good"
     elif len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<25:
+        arrows_array.pop(0)
         return "ok"
     else:
+        arrows_array.pop(0)
         super_bar.height = 0
         return "miss"
 
@@ -84,8 +88,8 @@ score = 0
 
 def special_use(moving_arrows_array):
     score_special = 50
-    for arrow in moving_arrows_array:
-        moving_arrows_array.remove(arrow)
+    while len(moving_arrows_array)>0:
+        moving_arrows_array.pop(0)
         score_special += 50
 
     return score_special
@@ -152,29 +156,32 @@ while True:
         arrow.move_x(arrows_speed*screen.delta_time())
         
     #remove as setas fora da tela das listas de setas para movimentar
-    if len(moving_arrows_up) and moving_arrows_left[0].x >= screen.width:
-        resposta = "miss"
-        x = moving_arrows_up.pop(0)
-        score -= 30
-    if len(moving_arrows_down) and moving_arrows_down[0].x >= screen.width:
-        resposta = "miss"
-        x = moving_arrows_down.pop(0)
-        score -= 30
-    if len(moving_arrows_left) and moving_arrows_left[0].x>= screen.width:
-        resposta = "miss"
-        x = moving_arrows_left.pop(0)
-        score -= 30
-    if len(moving_arrows_right) and moving_arrows_right[0].x >= screen.width:
-        resposta = "miss"
-        x = moving_arrows_right.pop(0)
-        score -= 30
+    if len(moving_arrows_up)>0:
+        if moving_arrows_up[0].x >= screen.width:
+            resposta = "miss"
+            moving_arrows_up.pop(0)
+            score -= 30
+    if len(moving_arrows_down)>0:
+        if moving_arrows_down[0].x >= screen.width:
+            resposta = "miss"
+            moving_arrows_down.pop(0)
+            score -= 30
+    if len(moving_arrows_left)>0:
+        if moving_arrows_left[0].x>= screen.width:
+            resposta = "miss"
+            moving_arrows_left.pop(0)
+            score -= 30
+    if len(moving_arrows_right)>0:
+        if moving_arrows_right[0].x >= screen.width:
+            resposta = "miss"
+            moving_arrows_right.pop(0)
+            score -= 30
     
     #avalia o timing em que uma tecla foi apertada, contando a pontuação
     if keyboard.key_pressed("UP") and arrow_tick > 0.3:
-        resposta = judge_inputs('UP', moving_arrows_up, super_meter)
+        resposta = judge_inputs("UP", moving_arrows_up, super_meter)
         score += judge_resposta(resposta)
         arrow_tick = 0
-        moving_arrows_up.pop(0)
     elif keyboard.key_pressed("DOWN") and arrow_tick > 0.3:
         resposta = judge_inputs('DOWN', moving_arrows_down, super_meter)
         score += judge_resposta(resposta)
