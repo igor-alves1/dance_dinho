@@ -158,6 +158,7 @@ def phase(screen, music):
                 resposta = "miss"
                 moving_arrows_up.pop(0)
                 score -= 30
+                super_meter.height = 0
         if len(moving_arrows_down)>0:
             if moving_arrows_down[0].x >= screen.width:
                 resposta = "miss"
