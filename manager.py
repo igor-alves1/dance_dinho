@@ -5,7 +5,7 @@ from phase import *
 
 GAME_STATE = 1
 GAME_SCREEN = Window(600, 600)
-GAME_PHASE = "rockabye"
+GAME_PHASE = "twinkle"
 
 while True:
     if GAME_STATE == 1:
