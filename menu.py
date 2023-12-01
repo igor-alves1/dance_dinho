@@ -23,25 +23,36 @@ def menu(screen):
     logo = Sprite("logo_dance_dinho2.png")
     logo.set_position(jogar_botao.x, screen.height/24)
     background = GameImage("clouds_background.png")
+    chao = GameImage("chao_placeholder.png")
 
     dinho = Animation("dinho_walking.png", 4)
-    dinho.set_position(screen.width/4, screen.height/2)
+    dinho.set_position(screen.width/2, screen.height/2)
     dinho.set_sequence_time(0, 4, 400, True)
     dinho_speed = 120
+    dinho.stop()
+    chao.y = dinho.y + 9*dinho.height/10
+    chao.x = dinho.x
+
+    jogar_pressed = False
+    vendinha_pressed = False
     
     while True:
         background.draw()
-        dinho.play()
+        chao.draw()
 
         logo.draw()
         if mouse.is_over_area((jogar_botao.x, jogar_botao.y), (jogar_botao.x+jogar_botao.width, jogar_botao.y+jogar_botao.height)):
             jogar_botao_grande.draw()
             if mouse.is_button_pressed(1):
-                return 2
+                dinho.play()
+                jogar_pressed = True
         else:
             jogar_botao.draw()
         if mouse.is_over_area((venda_botao.x, venda_botao.y), (venda_botao.x+venda_botao.width, venda_botao.y+venda_botao.height)):
             venda_botao_grande.draw()
+            if mouse.is_button_pressed(1):
+                dinho.play()
+                vendinha_pressed = True
         else:
             venda_botao.draw()
         if mouse.is_over_area((select_botao.x, select_botao.y), (select_botao.x+select_botao.width, select_botao.y+select_botao.height)):
@@ -57,8 +68,14 @@ def menu(screen):
         else:
             mouse.unhide()
 
+        if (dinho.x > screen.width) and jogar_pressed:
+            return 2
+        elif (dinho.x > screen.width) and vendinha_pressed:
+            return 3
+
         dinho.draw()
-        dinho.x += dinho_speed*screen.delta_time()
+        if dinho.is_playing():
+            dinho.x += dinho_speed*screen.delta_time()
         dinho.update()
 
         screen.update()
