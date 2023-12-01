@@ -176,19 +176,19 @@ def phase(screen, music):
                 score -= 30
         
         #avalia o timing em que uma tecla foi apertada, contando a pontuação
-        if keyboard.key_pressed("UP") and arrow_tick > 0.3:
+        if keyboard.key_pressed("UP") and arrow_tick > 0.2:
             resposta = judge_inputs("UP", moving_arrows_up, super_meter, checker_right)
             score += judge_resposta(resposta)
             arrow_tick = 0
-        elif keyboard.key_pressed("DOWN") and arrow_tick > 0.3:
+        elif keyboard.key_pressed("DOWN") and arrow_tick > 0.2:
             resposta = judge_inputs('DOWN', moving_arrows_down, super_meter, checker_right)
             score += judge_resposta(resposta)
             arrow_tick = 0
-        elif keyboard.key_pressed("LEFT") and arrow_tick > 0.3:
+        elif keyboard.key_pressed("LEFT") and arrow_tick > 0.2:
             resposta = judge_inputs('LEFT', moving_arrows_left, super_meter, checker_right)
             score += judge_resposta(resposta)
             arrow_tick = 0
-        elif keyboard.key_pressed("right") and arrow_tick > 0.3:
+        elif keyboard.key_pressed("right") and arrow_tick > 0.2:
             resposta = judge_inputs('right', moving_arrows_right, super_meter, checker_right)
             score += judge_resposta(resposta)
             arrow_tick = 0
