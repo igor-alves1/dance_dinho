@@ -16,14 +16,28 @@ def shop(screen):
     chao.set_position(0, dinho.y + 9*dinho.height/10)
     tenda = GameImage("vendinha_dinho.png")
     tenda.set_position(3*screen.width/4-tenda.width/2, chao.y-tenda.height)
-    inventario = Sprite("inventario_loja_holder.png")
-    inventario.set_position(screen.width/16, screen.height/16)
-    
+    itens = []
+    contador_itens = 0
+    guaravita = Animation("guaramor_formato.png", 2)
+    guaravita.set_position(tenda.x+tenda.width/4+5, tenda.y+tenda.height/2-11)
+    itens.append(guaravita)
+    burger = Animation("burger_formato.png", 2)
+    burger.set_position(guaravita.x+12, guaravita.y+(guaravita.height-burger.height))
+    itens.append(burger)
+    itens[contador_itens].set_curr_frame(1)
+    seta_tick = 0.15
+    timer_aperto = 0
 
     while True:
+        screen.update()
+        dinho.update()
+        timer_aperto += screen.delta_time()
         background.draw()
         chao.draw()
+        for item in itens:
+            item.draw()
         tenda.draw()
+        itens[contador_itens%len(itens)].draw()
         dinho.draw()
         if dinho.x >= 3*screen.width/4:
             dinho.x = 3*screen.width/4 - 1
@@ -32,11 +46,20 @@ def shop(screen):
         else:
             dinho.x += dinho_speed*screen.delta_time()
 
-        if not dinho.is_playing():
-            inventario.draw()
+        if dinho.is_playing():
+            continue
+
+        if keyboard.key_pressed('right') and timer_aperto > seta_tick:
+            itens[abs(contador_itens)%len(itens)].set_curr_frame(0)
+            contador_itens += 1
+            itens[abs(contador_itens)%len(itens)].set_curr_frame(1)
+            timer_aperto = 0
+        elif keyboard.key_pressed('left') and timer_aperto > seta_tick:
+            itens[abs(contador_itens)%len(itens)].set_curr_frame(0)
+            contador_itens -= 1
+            itens[abs(contador_itens)%len(itens)].set_curr_frame(1)
+            timer_aperto = 0
 
         if keyboard.key_pressed('esc'):
             return 1
-        screen.update()
-        dinho.update()
         

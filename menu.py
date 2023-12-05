@@ -37,8 +37,26 @@ def menu(screen):
     vendinha_pressed = False
     
     while True:
+        screen.update()
         background.draw()
         chao.draw()
+        dinho.draw()
+        if dinho.is_playing():
+            dinho.x += dinho_speed*screen.delta_time()
+        dinho.update()
+
+        if (dinho.x > screen.width) and jogar_pressed:
+            return 2
+        elif (dinho.x > screen.width) and vendinha_pressed:
+            return 3
+
+        if (dinho.x > screen.width) and jogar_pressed:
+            return 2
+        elif (dinho.x > screen.width) and vendinha_pressed:
+            return 3
+
+        if vendinha_pressed or jogar_pressed:
+            continue
 
         logo.draw()
         if mouse.is_over_area((jogar_botao.x, jogar_botao.y), (jogar_botao.x+jogar_botao.width, jogar_botao.y+jogar_botao.height)):
@@ -67,17 +85,5 @@ def menu(screen):
             cursor.draw()
         else:
             mouse.unhide()
-
-        if (dinho.x > screen.width) and jogar_pressed:
-            return 2
-        elif (dinho.x > screen.width) and vendinha_pressed:
-            return 3
-
-        dinho.draw()
-        if dinho.is_playing():
-            dinho.x += dinho_speed*screen.delta_time()
-        dinho.update()
-
-        screen.update()
 
     
