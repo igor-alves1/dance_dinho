@@ -7,21 +7,21 @@ from PPlay.sound import *
 def shop(screen):
     keyboard = screen.get_keyboard()
     mouse = screen.get_mouse()
-    background = GameImage("clouds_background.png")
-    chao = GameImage("chao_loja.png")
-    dinho = Animation("dinho_walking.png", 4)
+    background = GameImage("assets/clouds_background.png")
+    chao = GameImage("assets/chao_loja.png")
+    dinho = Animation("assets/dinho_walking.png", 4)
     dinho.set_position(-dinho.width, screen.height/2)
     dinho.set_sequence_time(0, 4, 400, True)
     dinho_speed = 120
     chao.set_position(0, dinho.y + 9*dinho.height/10)
-    tenda = GameImage("vendinha_dinho.png")
+    tenda = GameImage("assets/vendinha_dinho.png")
     tenda.set_position(3*screen.width/4-tenda.width/2, chao.y-tenda.height)
     itens = []
     contador_itens = 0
-    guaravita = Animation("guaramor_formato.png", 2)
+    guaravita = Animation("assets/guaramor_formato.png", 2)
     guaravita.set_position(tenda.x+tenda.width/4+5, tenda.y+tenda.height/2-11)
     itens.append(guaravita)
-    burger = Animation("burger_formato.png", 2)
+    burger = Animation("assets/burger_formato.png", 2)
     burger.set_position(guaravita.x+12, guaravita.y+(guaravita.height-burger.height))
     itens.append(burger)
     itens[contador_itens].set_curr_frame(1)

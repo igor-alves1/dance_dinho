@@ -2,30 +2,30 @@ from PPlay.window import *
 from PPlay.sprite import *
 from PPlay.animation import *
 from PPlay.gameimage import *
-#from PPlay.sound import *
+from PPlay.sound import *
 
 def menu(screen):
     teclado = screen.get_keyboard()
     mouse = screen.get_mouse()
-    cursor = Sprite("cursor.png")
-    jogar_botao = Animation("bora_dancar3.png", 1)
+    cursor = Sprite("assets/cursor.png")
+    jogar_botao = Animation("assets/bora_dancar3.png", 1)
     jogar_botao.set_position(1*screen.width/24, 13*screen.width/24)
-    jogar_botao_grande = Animation("bora_dancar4.png", 1)
+    jogar_botao_grande = Animation("assets/bora_dancar4.png", 1)
     jogar_botao_grande.set_position(jogar_botao.x, jogar_botao.y-(jogar_botao_grande.height-jogar_botao.height)/2)
-    venda_botao = Animation("venDINHO3.png", 1)
+    venda_botao = Animation("assets/venDINHO3.png", 1)
     venda_botao.set_position(jogar_botao.x, jogar_botao.y+jogar_botao.height)
-    venda_botao_grande = Animation("venDINHO4.png", 1)
+    venda_botao_grande = Animation("assets/venDINHO4.png", 1)
     venda_botao_grande.set_position(venda_botao.x, venda_botao.y-(venda_botao_grande.height-venda_botao.height)/2)
-    select_botao = Animation("playlist3.png", 1)
+    select_botao = Animation("assets/playlist3.png", 1)
     select_botao.set_position(jogar_botao.x, venda_botao.y+venda_botao.height)
-    select_botao_grande = Animation("playlist4.png", 1)
+    select_botao_grande = Animation("assets/playlist4.png", 1)
     select_botao_grande.set_position(select_botao.x, select_botao.y-(select_botao_grande.height-select_botao.height)/2)
-    logo = Sprite("logo_dance_dinho2.png")
+    logo = Sprite("assets/logo_dance_dinho2.png")
     logo.set_position(jogar_botao.x, screen.height/24)
-    background = GameImage("clouds_background.png")
-    chao = GameImage("chao_placeholder.png")
+    background = GameImage("assets/clouds_background.png")
+    chao = GameImage("assets/chao_placeholder.png")
 
-    dinho = Animation("dinho_walking.png", 4)
+    dinho = Animation("assets/dinho_walking.png", 4)
     dinho.set_position(screen.width/2, screen.height/2)
     dinho.set_sequence_time(0, 4, 400, True)
     dinho_speed = 120
