@@ -3,6 +3,7 @@ from menu import *
 #from select import *
 from phase import *
 from shop import *
+from select import *
 
 GAME_STATE = 1
 GAME_SCREEN = Window(600, 600)
@@ -17,6 +18,6 @@ while True:
     elif GAME_STATE == 3:
         GAME_STATE = shop(GAME_SCREEN)
     elif GAME_STATE == 4:
-        #GAME_PHASE = select(GAME_SCREEN)
+        GAME_PHASE = select(GAME_SCREEN)
         pass
         GAME_STATE = 2

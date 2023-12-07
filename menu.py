@@ -35,6 +35,7 @@ def menu(screen):
 
     jogar_pressed = False
     vendinha_pressed = False
+    select_pressed = False
     
     while True:
         screen.update()
@@ -49,13 +50,17 @@ def menu(screen):
             return 2
         elif (dinho.x > screen.width) and vendinha_pressed:
             return 3
+        elif (dinho.x > screen.width) and select_pressed:
+            return 4
 
         if (dinho.x > screen.width) and jogar_pressed:
             return 2
         elif (dinho.x > screen.width) and vendinha_pressed:
             return 3
+        elif (dinho.x > screen.width) and select_pressed:
+            return 4
 
-        if vendinha_pressed or jogar_pressed:
+        if vendinha_pressed or jogar_pressed or select_pressed:
             continue
 
         logo.draw()
@@ -75,6 +80,9 @@ def menu(screen):
             venda_botao.draw()
         if mouse.is_over_area((select_botao.x, select_botao.y), (select_botao.x+select_botao.width, select_botao.y+select_botao.height)):
             select_botao_grande.draw()
+            if mouse.is_button_pressed(1):
+                dinho.play()
+                select_pressed = True
         else:
             select_botao.draw()
 
