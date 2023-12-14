@@ -237,12 +237,12 @@ def phase(screen):
             down_i += 1
         if len(left_list)-1>left_i and timer >= (left_list[left_i]-4.9):
             new_left = Sprite("assets/left_arrow.png")
-            new_left.set_position(-new_up.width, 13*screen.height/16)
+            new_left.set_position(-new_left.width, 13*screen.height/16)
             moving_arrows_left.append(new_left)
             left_i += 1
         if len(right_list)-1> right_i and timer >= (right_list[right_i]-4.9):
             new_right = Sprite("assets/right_arrow.png")
-            new_right.set_position(-new_up.width, 14*screen.height/16)
+            new_right.set_position(-new_right.width, 14*screen.height/16)
             moving_arrows_right.append(new_right)
             right_i += 1
 
