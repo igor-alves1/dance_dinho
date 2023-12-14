@@ -47,7 +47,7 @@ def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_l
         new_xplosion.set_position(seta.x, seta.y)
         new_xplosion.play()
         xplosion_list.append(new_xplosion)
-        super_bar.height = 0
+        super_bar.height *= 8/10
         return "Vacilou..."
     else:
         return "Vacilou..."
@@ -97,9 +97,12 @@ def phase(screen):
     up_list, down_list, right_list, left_list = [], [], [], []
     song = Sound(f"docs/{music}/{music}.ogg")
     readToList(f'docs/{music}/{music}_up_file.txt', up_list)
+    up_list.pop(0)
     readToList(f'docs/{music}/{music}_down_file.txt', down_list)
     readToList(f'docs/{music}/{music}_left_file.txt', left_list)
     readToList(f'docs/{music}/{music}_right_file.txt', right_list)
+    for i in range(3):
+        right_list.pop(0)
 
     arrows_speed = 140
     arrow_tick = 0
@@ -166,7 +169,7 @@ def phase(screen):
     color_perfect = (26, 173, 184)
     color_good = (42, 196, 22)
     color_miss = (89, 11, 11)
-    
+    color_resposta = (0, 0, 0)
 
     while True:
         screen.update()
@@ -207,6 +210,15 @@ def phase(screen):
                 
         #inicia o timer e exibe o timer e o score na tela
         if music_is_on:
+            if len(resposta):
+                if resposta == "Mandou bem!!!":
+                    color_resposta = color_perfect
+                elif resposta == "Boa!":
+                    color_resposta = color_good
+                elif resposta == "Meh...":
+                    color_resposta = color_ok
+                elif resposta == "Vacilou...":
+                    color_resposta = color_miss
             timer += screen.delta_time()
             screen.draw_text(f'{timer:.0f}', time_hud.x+score_hud.width, time_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
             screen.draw_text(f'{score:.0f}', score_hud.x+score_hud.width, score_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
@@ -258,22 +270,25 @@ def phase(screen):
                 resposta = "Vacilou..."
                 moving_arrows_up.pop(0)
                 score -= 30
-                super_meter.height = 0
+                super_meter.height *= 8/10
         if len(moving_arrows_down)>0:
             if moving_arrows_down[0].x >= screen.width:
                 resposta = "Vacilou..."
                 moving_arrows_down.pop(0)
                 score -= 30
+                super_meter.height *= 8/10
         if len(moving_arrows_left)>0:
             if moving_arrows_left[0].x>= screen.width:
                 resposta = "Vacilou..."
                 moving_arrows_left.pop(0)
                 score -= 30
+                super_meter.height *= 8/10
         if len(moving_arrows_right)>0:
             if moving_arrows_right[0].x >= screen.width:
                 resposta = "Vacilou..."
                 moving_arrows_right.pop(0)
                 score -= 30
+                super_meter.height *= 8/10
         
         if len(xplosion_list)>0 and xplosion_list[0].is_playing() == False:
             seta = xplosion_list.pop(0)

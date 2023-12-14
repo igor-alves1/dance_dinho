@@ -22,8 +22,8 @@ def select(screen):
     fase3 = Sprite("assets/exemplofase3.png")
     fase3.set_position(screen.width*0.18, screen.height*0.606)
 
-    fase4 = Sprite("assets/exemplofase4.png")
-    fase4.set_position(screen.width*0.606, screen.height*0.606)
+    mars = Sprite("assets/exemplofase4.png")
+    mars.set_position(screen.width*0.606, screen.height*0.606)
 
     seta = Sprite("assets/voltar1.png")
     seta.set_position(screen.width*0.01, screen.height*0.01)    
@@ -36,7 +36,7 @@ def select(screen):
         twinkle.draw()
         fase2.draw()
         fase3.draw()
-        fase4.draw()
+        mars.draw()
         seta.draw()
         cursor.draw()
 
@@ -47,3 +47,9 @@ def select(screen):
             doc.write("twinkle")
             doc.close()
             return 2
+        elif mouse.is_over_object(mars) and mouse.is_button_pressed(1):
+            doc = open("curr_phase.txt", "w")
+            doc.write("mars")
+            doc.close()
+            return 2
+        

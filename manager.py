@@ -13,7 +13,5 @@ while True:
         GAME_STATE = menu(GAME_SCREEN)
     elif GAME_STATE == 2:
         GAME_STATE = phase(GAME_SCREEN)
-    elif GAME_STATE == 3:
-        GAME_STATE = shop(GAME_SCREEN)
     elif GAME_STATE == 4:
         GAME_STATE = select(GAME_SCREEN)

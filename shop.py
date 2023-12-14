@@ -16,6 +16,8 @@ def shop(screen):
     chao.set_position(0, dinho.y + 9*dinho.height/10)
     tenda = GameImage("assets/vendinha_dinho.png")
     tenda.set_position(3*screen.width/4-tenda.width/2, chao.y-tenda.height)
+    cifra = Sprite("assets/cifra.png")
+    cifra.set_position(screen.width/16, screen.height/16)
 
     doc = open("coins.txt", 'r')
     coins = int(doc.readline())
@@ -50,10 +52,15 @@ def shop(screen):
         background.draw()
         chao.draw()
         tenda.draw()
+        cifra.draw()
         for item in itens:
             item.draw()
         itens[contador_itens%len(itens)].draw()
         dinho.draw()
+
+        screen.draw_text(f'{coins}', x=cifra.x+cifra.width, y=cifra.y+cifra.height/3, size=25,
+                         font_name="ocr-a", color=(49, 12, 92) , bold=True)
+        
         if dinho.x >= 3*screen.width/4 and not item_flag:
             dinho.x = 3*screen.width/4 - 1
             dinho_speed = 0
@@ -66,7 +73,8 @@ def shop(screen):
         if dinho.is_playing():
             continue
 
-        screen.draw_text("Deseja comprar algo para ajudá-lo na próxima fase?", x=screen.width/4, y=screen.height/4)
+        screen.draw_text("Deseja comprar algo para ajudá-lo na próxima fase?",
+                         x=screen.width/4, y=screen.height/4, color=(49,12,92), bold = True)
 
         if keyboard.key_pressed('right') and timer_aperto > seta_tick:
             itens[abs(contador_itens)%len(itens)].set_curr_frame(0)
@@ -84,12 +92,15 @@ def shop(screen):
             power_up.write(str(abs(contador_itens)%len(itens)))
             power_up.close()
             doc = open("coins.txt", 'w')
-            doc.write(str(coins-25))
+            coins -= 25
+            doc.write(str(coins))
             doc.close()
             dinho.play()
             dinho_speed = 120
             item_flag = True
 
         if keyboard.key_pressed('esc'):
-            return 1
+            item_flag = True
+            dinho_speed = 120
+            dinho.play()
         
