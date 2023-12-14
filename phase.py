@@ -3,6 +3,8 @@ from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.animation import *
 from PPlay.sound import *
+from end_phase import *
+from shop import *
 
 def readToList(doc_name, array):
     file = open(doc_name, 'r')
@@ -12,7 +14,7 @@ def readToList(doc_name, array):
         array.append(time)
     file.close()
 
-def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_list):
+def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_list, multiplicador):
     if len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<5:
         seta = arrows_array.pop(0)
         new_xplosion = Animation("assets/xplosion_spritesheet.png", 6)
@@ -20,8 +22,8 @@ def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_l
         new_xplosion.set_position(seta.x, seta.y)
         new_xplosion.play()
         xplosion_list.append(new_xplosion)
-        super_bar.height += 5
-        return "perfect"
+        super_bar.height += 5*multiplicador
+        return "Mandou bem!!!"
     elif len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<15:
         seta = arrows_array.pop(0)
         new_xplosion = Animation("assets/xplosion_spritesheet.png", 6)
@@ -29,7 +31,7 @@ def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_l
         new_xplosion.set_position(seta.x, seta.y)
         new_xplosion.play()
         xplosion_list.append(new_xplosion)
-        return "good"
+        return "Boa!"
     elif len(arrows_array)>0 and abs(arrows_array[0].x-checker_right.x)<25:
         seta = arrows_array.pop(0)
         new_xplosion = Animation("assets/xplosion_spritesheet.png", 6)
@@ -37,7 +39,7 @@ def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_l
         new_xplosion.set_position(seta.x, seta.y)
         new_xplosion.play()
         xplosion_list.append(new_xplosion)
-        return "ok"
+        return "Meh..."
     elif len(arrows_array)>0:
         seta = arrows_array.pop(0)
         new_xplosion = Animation("assets/xplosion_spritesheet.png", 6)
@@ -46,16 +48,16 @@ def judge_inputs(key_entered, arrows_array, super_bar, checker_right, xplosion_l
         new_xplosion.play()
         xplosion_list.append(new_xplosion)
         super_bar.height = 0
-        return "miss"
+        return "Vacilou..."
     else:
-        return "miss"
+        return "Vacilou..."
 
 def judge_resposta(resposta):
-    if resposta == "perfect":
+    if resposta == "Mandou bem!!!":
         return 50
-    elif resposta == "good":
+    elif resposta == "Boa!":
         return 20
-    elif resposta == "ok":
+    elif resposta == "Meh...":
         return 10
     return -30
 
@@ -72,7 +74,10 @@ def special_use(moving_arrows_array, xplosion_list):
 
     return score_special
 
-def phase(screen, music):
+def phase(screen):
+    voltar = shop(screen)
+    if voltar == 1:
+        return 1
     keyboard = screen.get_keyboard()
     background = GameImage("assets/clouds_background.png")
 
@@ -82,6 +87,12 @@ def phase(screen, music):
     dinho_speed = 120
     chao = GameImage("assets/chao_loja.png")
     chao.set_position(0, dinho.y + 9*dinho.height/10)
+
+    doc = open("curr_phase.txt")
+    music = doc.readline()
+    doc.close()
+    if len(music) < 1:
+        return 1
 
     up_list, down_list, right_list, left_list = [], [], [], []
     song = Sound(f"docs/{music}/{music}.ogg")
@@ -134,6 +145,29 @@ def phase(screen, music):
 
     xplosion_list = []
 
+    multiplicador = 1
+    especial_multi = 1
+    pontos_especial_multi = 1
+    
+    file_power = open("powerups.txt", 'r')
+    power_up = int(file_power.readline())
+    file_power.close()
+    file_power = open("powerups.txt", 'w')
+    file_power.write("-1")
+    file_power.close()
+    if power_up == 0:
+        multiplicador = 1.2
+    if power_up == 1:
+        especial_multi = 1.5
+    if power_up == 2:
+        pontos_especial_multi = 1.5
+
+    color_ok = (186, 156, 24)
+    color_perfect = (26, 173, 184)
+    color_good = (42, 196, 22)
+    color_miss = (89, 11, 11)
+    
+
     while True:
         screen.update()
         dinho.update()
@@ -175,8 +209,8 @@ def phase(screen, music):
         if music_is_on:
             timer += screen.delta_time()
             screen.draw_text(f'{timer:.0f}', time_hud.x+score_hud.width, time_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
-            screen.draw_text(f'{score}', score_hud.x+score_hud.width, score_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
-            screen.draw_text(f'{resposta}', checker_up.x, checker_up.y-40, color=(171,27,196), size=15, font_name="ocr-a", bold=True)
+            screen.draw_text(f'{score:.0f}', score_hud.x+score_hud.width, score_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
+            screen.draw_text(f'{resposta}', checker_up.x, checker_up.y-40, color=color_resposta, size=15, font_name="ocr-a", bold=True)
 
         #faz as setinhas surgirem com delay para chegarem do outro lado na tela no tempo certo
         if len(up_list)-1 > up_i  and timer >= (up_list[up_i]-4.9):
@@ -221,23 +255,23 @@ def phase(screen, music):
         #remove as setas fora da tela das listas de setas para movimentar
         if len(moving_arrows_up)>0:
             if moving_arrows_up[0].x >= screen.width:
-                resposta = "miss"
+                resposta = "Vacilou..."
                 moving_arrows_up.pop(0)
                 score -= 30
                 super_meter.height = 0
         if len(moving_arrows_down)>0:
             if moving_arrows_down[0].x >= screen.width:
-                resposta = "miss"
+                resposta = "Vacilou..."
                 moving_arrows_down.pop(0)
                 score -= 30
         if len(moving_arrows_left)>0:
             if moving_arrows_left[0].x>= screen.width:
-                resposta = "miss"
+                resposta = "Vacilou..."
                 moving_arrows_left.pop(0)
                 score -= 30
         if len(moving_arrows_right)>0:
             if moving_arrows_right[0].x >= screen.width:
-                resposta = "miss"
+                resposta = "Vacilou..."
                 moving_arrows_right.pop(0)
                 score -= 30
         
@@ -247,21 +281,20 @@ def phase(screen, music):
         
         #avalia o timing em que uma tecla foi apertada, contando a pontuação
         if keyboard.key_pressed("UP")and arrow_tick > 0.2:
-            resposta = judge_inputs("UP", moving_arrows_up, super_meter, checker_right, xplosion_list)
+            resposta = judge_inputs("UP", moving_arrows_up, super_meter, checker_right, xplosion_list, especial_multi)
             score += judge_resposta(resposta)
             arrow_tick = 0
         elif keyboard.key_pressed("DOWN") and arrow_tick > 0.2:
-            resposta = judge_inputs('DOWN', moving_arrows_down, super_meter, checker_right, xplosion_list)
-            score += judge_resposta(resposta)
+            resposta = judge_inputs('DOWN', moving_arrows_down, super_meter, checker_right, xplosion_list, especial_multi)
+            score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
         elif keyboard.key_pressed("LEFT") and arrow_tick > 0.2:
-            resposta = judge_inputs('LEFT', moving_arrows_left, super_meter, checker_right, xplosion_list)
-            score += judge_resposta(resposta)
+            resposta = judge_inputs('LEFT', moving_arrows_left, super_meter, checker_right, xplosion_list, especial_multi)
+            score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
         elif keyboard.key_pressed("right") and arrow_tick > 0.2:
-            fx_right.draw()
-            resposta = judge_inputs('right', moving_arrows_right, super_meter, checker_right, xplosion_list)
-            score += judge_resposta(resposta)
+            resposta = judge_inputs('right', moving_arrows_right, super_meter, checker_right, xplosion_list, especial_multi)
+            score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
         else:
             arrow_tick += screen.delta_time()
@@ -277,13 +310,16 @@ def phase(screen, music):
 
         #ação do especial
         if keyboard.key_pressed("SPACE") and super_meter.height >=128:
-            score += special_use(moving_arrows_up, xplosion_list)
-            score += special_use(moving_arrows_down, xplosion_list)
-            score += special_use(moving_arrows_right, xplosion_list)
-            score += special_use(moving_arrows_left, xplosion_list)
+            score += pontos_especial_multi*special_use(moving_arrows_up, xplosion_list)
+            score += pontos_especial_multi*special_use(moving_arrows_down, xplosion_list)
+            score += pontos_especial_multi*special_use(moving_arrows_right, xplosion_list)
+            score += pontos_especial_multi*special_use(moving_arrows_left, xplosion_list)
             super_meter.height = 0
 
         if up_list[-1] < timer:
             music_is_on = False
-            screen.draw_text(f'Finish!', screen.width/2, screen.height/8, color=(0,0,0), size=35)
-            screen.draw_text(f'{score}', screen.width/2, screen.height/8+10, color=(0,0,0), size=35, font_name="segoeui")
+            return end_phase(screen, score)
+
+        if keyboard.key_pressed("Y"):
+            song.pause()
+            return end_phase(screen, score)
