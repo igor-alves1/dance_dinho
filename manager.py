@@ -7,7 +7,7 @@ from select import *
 
 GAME_STATE = 1
 GAME_SCREEN = Window(600, 600)
-GAME_PHASE = "twinkle"
+GAME_PHASE = "mars"
 
 while True:
     if GAME_STATE == 1:
