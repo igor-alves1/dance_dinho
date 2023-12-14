@@ -4,31 +4,33 @@ from PPlay.animation import *
 from PPlay.gameimage import *
 from PPlay.sound import *
 
-
 def select(screen):
     keyboard = screen.get_keyboard()
     mouse = screen.get_mouse()
+    cursor = Sprite("assets/cursor.png")
     background = GameImage("assets/fundo_playlist.png")
     
     playlist = GameImage("assets/playlist_titulo.png")
     playlist.set_position(screen.width*0.18, screen.height*0.09)
 
-    twinkle = GameImage("assets/exemplofase1.png")
+    twinkle = Sprite("assets/exemplofase1.png")
     twinkle.set_position(screen.width*0.18, screen.height*0.393)
 
-    fase2 = GameImage("assets/exemplofase2.png")
+    fase2 = Sprite("assets/exemplofase2.png")
     fase2.set_position(screen.width*0.606, screen.height*0.393)
 
-    fase3 = GameImage("assets/exemplofase3.png")
+    fase3 = Sprite("assets/exemplofase3.png")
     fase3.set_position(screen.width*0.18, screen.height*0.606)
 
-    fase4 = GameImage("assets/exemplofase4.png")
+    fase4 = Sprite("assets/exemplofase4.png")
     fase4.set_position(screen.width*0.606, screen.height*0.606)
 
-    seta = GameImage("assets/voltar1.png")
+    seta = Sprite("assets/voltar1.png")
     seta.set_position(screen.width*0.01, screen.height*0.01)    
 
     while True:
+        coords = mouse.get_position()
+        cursor.set_position(coords[0], coords[1])
         screen.update()
         background.draw()
         twinkle.draw()
@@ -36,7 +38,12 @@ def select(screen):
         fase3.draw()
         fase4.draw()
         seta.draw()
+        cursor.draw()
 
-        if  mouse.is_over_area((seta.x, seta.y), (seta.x+seta.width, seta.y+seta.height)):
-            if mouse.is_button_pressed(1):
-                return 1         
+        if mouse.is_over_object(seta) and mouse.is_button_pressed(1):
+            return 1
+        elif mouse.is_over_object(twinkle) and mouse.is_button_pressed(1):
+            doc = open("curr_phase.txt", 'w')
+            doc.write("twinkle")
+            doc.close()
+            return 2
