@@ -29,6 +29,11 @@ def menu(screen):
     chao.y = dinho.y + 9*dinho.height/10
     chao.x = dinho.x-dinho.width
 
+    back = Sprite("assets/seta_voltar.png")
+    back.set_position(select_botao.x, select_botao.y+4*select_botao.height/3)
+    back_grande = Sprite("assets/seta_voltar_grande.png")
+    back_grande.set_position(back.x, back.y)
+
     jogar_pressed = False
     select_pressed = False
     
@@ -69,6 +74,12 @@ def menu(screen):
                 select_pressed = True
         else:
             select_botao.draw()
+        if mouse.is_over_object(back):
+            back_grande.draw()
+            if mouse.is_button_pressed(1):
+                screen.close()
+        else:
+            back.draw()
 
         if mouse.is_on_screen():
             mouse.hide()

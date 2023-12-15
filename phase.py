@@ -89,6 +89,11 @@ def phase(screen):
     dinho.set_position(-dinho.width, screen.height/2)
     dinho.set_sequence_time(0, 4, 400, True)
     dinho_speed = 120
+    dinho_danca = Animation("assets/dinho_dancando.png", 4)
+    dinho_danca.set_initial_frame(3)
+    dinho_danca.stop()
+    dinho_danca.hide()
+    
     chao = GameImage("assets/chao_loja.png")
     chao.set_position(0, dinho.y + 9*dinho.height/10)
 
@@ -181,6 +186,8 @@ def phase(screen):
     enter_tick = 1
     enter_timer = 0
     print_enter = 0
+    dance_tick = 0.8
+    dance_timer = 0
 
     lamp_post1 = Sprite("assets/lamp_post.png")
     lamp_post1.set_position(2*(screen.width-lamp_post1.width)/8, chao.y-lamp_post1.height+6)
@@ -194,8 +201,10 @@ def phase(screen):
     lixeira2.set_position(lamp_post2.x+lixeira1.width, chao.y-lixeira1.height+10)
 
     while True:
+        dance_timer += screen.delta_time()
         screen.update()
         dinho.update()
+        dinho_danca.update()
         background.draw()
         chao.draw()
         banquinho.draw()
@@ -206,6 +215,7 @@ def phase(screen):
         score_hud.draw()
         time_hud.draw()
         dinho.draw()
+        dinho_danca.draw()
         if dinho.x >= 2*screen.width/4:
             dinho.x = 2*screen.width/4 - 1
             dinho_speed = 0
@@ -237,6 +247,9 @@ def phase(screen):
                 
         #inicia o timer e exibe o timer e o score na tela
         if music_is_on:
+            dinho_danca.unhide()
+            dinho_danca.set_position(dinho.x, dinho.y)
+            dinho.hide()
             if len(resposta):
                 if resposta == "Mandou bem!!!":
                     color_resposta = color_perfect
@@ -333,18 +346,30 @@ def phase(screen):
             resposta = judge_inputs("UP", moving_arrows_up, super_meter, checker_right, xplosion_list, especial_multi)
             score += judge_resposta(resposta)
             arrow_tick = 0
+            if dance_timer > dance_tick:
+                dinho_danca.set_curr_frame(0)
+                dance_timer = 0
         elif keyboard.key_pressed("DOWN") and arrow_tick > 0.2:
             resposta = judge_inputs('DOWN', moving_arrows_down, super_meter, checker_right, xplosion_list, especial_multi)
             score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
+            if dance_timer > dance_tick:
+                dinho_danca.set_curr_frame(3)
+                dance_timer = 0
         elif keyboard.key_pressed("LEFT") and arrow_tick > 0.2:
             resposta = judge_inputs('LEFT', moving_arrows_left, super_meter, checker_right, xplosion_list, especial_multi)
             score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
+            if dance_timer > dance_tick:
+                dinho.set_curr_frame(1)
+                dance_timer = 0
         elif keyboard.key_pressed("right") and arrow_tick > 0.2:
             resposta = judge_inputs('right', moving_arrows_right, super_meter, checker_right, xplosion_list, especial_multi)
             score += judge_resposta(resposta)*multiplicador
             arrow_tick = 0
+            if dance_timer > dance_tick:
+                dinho_danca.set_curr_frame(2)
+                dance_timer = 0
         else:
             arrow_tick += screen.delta_time()
 
