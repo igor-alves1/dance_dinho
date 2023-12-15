@@ -19,7 +19,7 @@ def menu(screen):
     logo = Sprite("assets/logo_dance_dinho2.png")
     logo.set_position(jogar_botao.x, screen.height/24)
     background = GameImage("assets/clouds_background.png")
-    chao = GameImage("assets/chao_placeholder.png")
+    chao = GameImage("assets/chao_loja.png")
 
     dinho = Animation("assets/dinho_walking.png", 4)
     dinho.set_position(screen.width/2, screen.height/2)
@@ -27,7 +27,7 @@ def menu(screen):
     dinho_speed = 120
     dinho.stop()
     chao.y = dinho.y + 9*dinho.height/10
-    chao.x = dinho.x
+    chao.x = dinho.x-dinho.width
 
     jogar_pressed = False
     select_pressed = False

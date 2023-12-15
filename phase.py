@@ -6,6 +6,10 @@ from PPlay.sound import *
 from end_phase import *
 from shop import *
 
+def score_needed(array):
+    x = len(array)
+    return x*20
+
 def readToList(doc_name, array):
     file = open(doc_name, 'r')
     for line in file:
@@ -99,7 +103,9 @@ def phase(screen):
     readToList(f'docs/{music}/{music}_up_file.txt', up_list)
     up_list.pop(0)
     readToList(f'docs/{music}/{music}_down_file.txt', down_list)
+    down_list.pop(0)
     readToList(f'docs/{music}/{music}_left_file.txt', left_list)
+    left_list.pop(0)
     readToList(f'docs/{music}/{music}_right_file.txt', right_list)
     for i in range(3):
         right_list.pop(0)
@@ -145,6 +151,7 @@ def phase(screen):
     score_hud.set_position(screen.width/32, score_hud.height)
     time_hud = Sprite("assets/timer_hud.png")
     time_hud.set_position(score_hud.x, score_hud.y+score_hud.height)
+    needed_score = score_needed(up_list)+score_needed(down_list)+score_needed(right_list)+score_needed(left_list)
 
     xplosion_list = []
 
@@ -171,16 +178,36 @@ def phase(screen):
     color_miss = (89, 11, 11)
     color_resposta = (0, 0, 0)
 
+    enter_tick = 1
+    enter_timer = 0
+    print_enter = 0
+
+    lamp_post1 = Sprite("assets/lamp_post.png")
+    lamp_post1.set_position(2*(screen.width-lamp_post1.width)/8, chao.y-lamp_post1.height+6)
+    lamp_post2 = Sprite("assets/lamp_post.png")
+    lamp_post2.set_position(6*(screen.width-lamp_post1.width)/8, chao.y-lamp_post2.height+6)
+    banquinho = Sprite("assets/banquinho.png")
+    banquinho.set_position((screen.width-banquinho.width)/2, chao.y-banquinho.height)
+    lixeira1 = Sprite("assets/trashcan.png")
+    lixeira1.set_position(lamp_post1.x-lixeira1.width, chao.y-lixeira1.height+10)
+    lixeira2 = Sprite("assets/trashcan.png")
+    lixeira2.set_position(lamp_post2.x+lixeira1.width, chao.y-lixeira1.height+10)
+
     while True:
         screen.update()
         dinho.update()
         background.draw()
         chao.draw()
+        banquinho.draw()
+        lamp_post1.draw()
+        lamp_post2.draw()
+        lixeira1.draw()
+        lixeira2.draw()
         score_hud.draw()
         time_hud.draw()
         dinho.draw()
-        if dinho.x >= 3*screen.width/4:
-            dinho.x = 3*screen.width/4 - 1
+        if dinho.x >= 2*screen.width/4:
+            dinho.x = 2*screen.width/4 - 1
             dinho_speed = 0
             dinho.stop()
         else:
@@ -220,10 +247,17 @@ def phase(screen):
                 elif resposta == "Vacilou...":
                     color_resposta = color_miss
             timer += screen.delta_time()
-            screen.draw_text(f'{timer:.0f}', time_hud.x+score_hud.width, time_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
-            screen.draw_text(f'{score:.0f}', score_hud.x+score_hud.width, score_hud.y, color=(49,12,92), size=20, font_name="ocr-a", bold=True)
-            screen.draw_text(f'{resposta}', checker_up.x, checker_up.y-40, color=color_resposta, size=15, font_name="ocr-a", bold=True)
-
+            screen.draw_text(f'{timer:.0f}', time_hud.x+score_hud.width, time_hud.y, color=(49,12,92), size=20, bold=True)
+            screen.draw_text(f'{score:.0f}', score_hud.x+score_hud.width, score_hud.y, color=(49,12,92), size=20, bold=True)
+            screen.draw_text(f'{resposta}', score_hud.x, time_hud.y+time_hud.height+10, color=color_resposta, size=15, bold=True)
+        if enter_pressed == False and music_is_on == False:
+            if enter_timer < enter_tick:
+                enter_timer += screen.delta_time()
+            else:
+                enter_timer = 0
+                print_enter = abs(print_enter-1)
+            if print_enter:
+                screen.draw_text("(pressione ENTER para começar!)", x=screen.width/2-80, y=screen.height/4,color=(16,22,51))
         #faz as setinhas surgirem com delay para chegarem do outro lado na tela no tempo certo
         if len(up_list)-1 > up_i  and timer >= (up_list[up_i]-4.9):
             new_up = Sprite("assets/UpArrow.png")
@@ -333,8 +367,9 @@ def phase(screen):
 
         if up_list[-1] < timer:
             music_is_on = False
-            return end_phase(screen, score)
+            song.pause()
+            return end_phase(screen, score, needed_score)
 
         if keyboard.key_pressed("Y"):
             song.pause()
-            return end_phase(screen, score)
+            return end_phase(screen, score, needed_score)
