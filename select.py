@@ -62,13 +62,15 @@ def select(screen):
         else:
             seta.draw()
         if mouse.is_over_object(twinkle) and mouse.is_button_pressed(1):
-            doc = open("curr_phase.txt", 'w')
-            doc.write("twinkle")
-            doc.close()
-            return 2
+            c
         if mouse.is_over_object(mars) and mouse.is_button_pressed(1):
             doc = open("curr_phase.txt", "w")
             doc.write("mars")
+            doc.close()
+            return 2
+        if mouse.is_over_object(fase3) and mouse.is_button_pressed(1):
+            doc = open("curr_phase.txt", "w")
+            doc.write("rockabye")
             doc.close()
             return 2
         cursor.draw()
